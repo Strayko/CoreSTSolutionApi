@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Threading.Tasks;
+using CoreSTSolutionApi.Data;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CoreSTSolutionApi.Controllers
 {
@@ -6,10 +10,25 @@ namespace CoreSTSolutionApi.Controllers
     [Route("api/[controller]")]
     public class BlogsController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetBlogs()
+        private readonly IBlogRepository _blogRepository;
+
+        public BlogsController(IBlogRepository blogRepository)
         {
-            return Ok(new {Id = 1, Name = ".NET CORE Web Api", Description = "Lorem ipsum sit dolor amet!"});
+            _blogRepository = blogRepository;
+        }
+        
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            try
+            {
+                var results = await _blogRepository.GetAllBlogsAsync();
+                return Ok(results);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+            }
         }
     }
 }

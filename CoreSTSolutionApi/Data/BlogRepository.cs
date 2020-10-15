@@ -54,7 +54,6 @@ namespace CoreSTSolutionApi.Data
                 .Include(c => c.Category);
 
             query = query.Where(n => n.Name == name);
-
             return await query.FirstOrDefaultAsync();
         }
     }
