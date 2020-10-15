@@ -17,24 +17,6 @@ namespace CoreSTSolutionApi.Data
             _logger = logger;
         }
 
-        public void Add<T>(T entity) where T : class
-        {
-            _logger.LogInformation($"Adding an object of type {entity.GetType()} to the context.");
-            _appDbContext.Add(entity);
-        }
-
-        public void Delete<T>(T entity) where T : class
-        {
-            _logger.LogInformation($"Removing an object of type {entity.GetType()} to the context.");
-            _appDbContext.Remove(entity);
-        }
-
-        public async Task<bool> SaveChangesAsync()
-        {
-            _logger.LogInformation($"Attempting to save the changes in the context.");
-            return (await _appDbContext.SaveChangesAsync()) > 0;
-        }
-
         public async Task<Blog[]> GetAllBlogsAsync(bool includeCategory = false)
         {
             _logger.LogInformation($"Getting all Blogs.");
@@ -46,14 +28,14 @@ namespace CoreSTSolutionApi.Data
             return await query.ToArrayAsync();
         }
 
-        public async Task<Blog> GetBlogAsync(string name, bool includeCategory = false)
+        public async Task<Blog> GetBlogAsync(int blogId, bool includeCategory = false)
         {
-            _logger.LogInformation($"Getting a Blog for {name}");
+            _logger.LogInformation($"Getting a Blog for {blogId}");
 
             IQueryable<Blog> query = _appDbContext.Blogs
                 .Include(c => c.Category);
 
-            query = query.Where(n => n.Name == name);
+            query = query.Where(n => n.BlogId == blogId);
             return await query.FirstOrDefaultAsync();
         }
     }
