@@ -12,17 +12,23 @@ namespace CoreSTSolutionApi.Data
         
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Tag> Tags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             
-            //Seed categories
-            modelBuilder.Entity<Category>().HasData(new Category { CategoryId = 1, CategoryName = "Java" });
+            // Seed Categories
+            modelBuilder.Entity<Category>().HasData(new Category { CategoryId = 1, CategoryName = "Java"});
             modelBuilder.Entity<Category>().HasData(new Category { CategoryId = 2, CategoryName = "ASP.NET" });
             modelBuilder.Entity<Category>().HasData(new Category { CategoryId = 3, CategoryName = "PHP" });
             
-            //Seed blogs
+            // Seed Tags
+            modelBuilder.Entity<Tag>().HasData(new Tag {TagId = 1, Name = "Programming"});
+            modelBuilder.Entity<Tag>().HasData(new Tag {TagId = 2, Name = "Traveling"});
+            modelBuilder.Entity<Tag>().HasData(new Tag {TagId = 3, Name = "Software"});
+
+            // Seed Blogs
             modelBuilder.Entity<Blog>().HasData(new Blog
             {
                 BlogId = 1,

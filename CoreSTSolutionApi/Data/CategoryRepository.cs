@@ -17,7 +17,7 @@ namespace CoreSTSolutionApi.Data
             _logger = logger;
         }
 
-        public async Task<Category[]> GetAllCategoriesAsync(bool includeCategory = false)
+        public async Task<Category[]> GetAllCategoriesAsync(bool includeBlog = false)
         {
             _logger.LogInformation($"Getting all Categories.");
 
@@ -28,7 +28,7 @@ namespace CoreSTSolutionApi.Data
             return await query.ToArrayAsync();
         }
 
-        public async Task<Category> GetCategoryAsync(string name, bool includeCategory = false)
+        public async Task<Category> GetCategoryAsync(string name, bool includeBlog = false)
         {
             _logger.LogInformation($"Getting a Category for {name}");
 

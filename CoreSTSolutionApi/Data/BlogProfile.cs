@@ -8,7 +8,11 @@ namespace CoreSTSolutionApi.Data
     {
         public BlogProfile()
         {
-            this.CreateMap<Blog, BlogModel>();
+            this.CreateMap<Blog, BlogModel>()
+                .ForMember(c=>c.Category, o 
+                    => o.MapFrom(m=>m.Category.CategoryName))
+                .ForMember(c=>c.Description, o
+                    => o.MapFrom(m=>m.Category.Description));
         }
     }
 }

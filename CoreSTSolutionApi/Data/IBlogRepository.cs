@@ -5,7 +5,7 @@ namespace CoreSTSolutionApi.Data
 {
     public interface IBlogRepository
     {
-        Task<Blog[]> GetAllBlogsAsync(bool includeCategory = false);
-        Task<Blog> GetBlogAsync(int blogId, bool includeCategory = false);
+        Task<Blog[]> GetAllBlogsAsync(bool includeTags = false);
+        Task<Blog> GetBlogAsync(int blogId, bool includeTag = false);
     }
 }

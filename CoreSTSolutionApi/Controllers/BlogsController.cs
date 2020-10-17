@@ -22,11 +22,12 @@ namespace CoreSTSolutionApi.Controllers
         }
         
         [HttpGet]
-        public async Task<ActionResult<BlogModel[]>> Get()
+        public async Task<ActionResult<BlogModel[]>> Get(bool includeTags = false)
         {
             try
             {
-                var results = await _blogRepository.GetAllBlogsAsync();
+                var results = await _blogRepository.GetAllBlogsAsync(includeTags);
+                
                 BlogModel[] models = _mapper.Map<BlogModel[]>(results);
                 return models;
             }
