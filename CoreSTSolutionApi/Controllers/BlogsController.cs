@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoreSTSolutionApi.Data;
@@ -27,7 +28,6 @@ namespace CoreSTSolutionApi.Controllers
             try
             {
                 var results = await _blogRepository.GetAllBlogsAsync(includeTags);
-                
                 BlogModel[] models = _mapper.Map<BlogModel[]>(results);
                 return models;
             }
@@ -45,6 +45,21 @@ namespace CoreSTSolutionApi.Controllers
                 var result = await _blogRepository.GetBlogAsync(blogId);
                 if (result == null) return NotFound();
                 return _mapper.Map<BlogModel>(result);
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+            }
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<BlogModel[]>> SearchByName(string name)
+        {
+            try
+            {
+                var results = await _blogRepository.GetAllBlogsByName(name);
+                if (!results.Any()) return NotFound();
+                return _mapper.Map<BlogModel[]>(results);
             }
             catch (Exception)
             {

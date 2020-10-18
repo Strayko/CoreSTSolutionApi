@@ -45,5 +45,18 @@ namespace CoreSTSolutionApi.Data
             query = query.Where(n => n.BlogId == blogId);
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Blog[]> GetAllBlogsByName(string name)
+        {
+            _logger.LogInformation($"Getting all Blogs");
+
+            IQueryable<Blog> query = _appDbContext.Blogs
+                .Include(c => c.Category);
+
+            query = query.OrderByDescending(b => b.Name)
+                .Where(b => b.Name.Contains(name));
+
+            return await query.ToArrayAsync();
+        }
     }
 }
