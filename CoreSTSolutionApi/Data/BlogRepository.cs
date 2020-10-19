@@ -70,5 +70,15 @@ namespace CoreSTSolutionApi.Data
 
             return await query.FirstOrDefaultAsync();
         }
+
+        public async Task<Blog> SetModified(Blog model)
+        {
+            _appDbContext.SetModified(model);
+
+            IQueryable<Blog> query = _appDbContext.Blogs
+                .Where(b => b.BlogId == model.BlogId);
+
+            return await query.FirstOrDefaultAsync();
+        }
     }
 }

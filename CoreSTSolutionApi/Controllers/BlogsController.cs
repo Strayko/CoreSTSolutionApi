@@ -25,7 +25,7 @@ namespace CoreSTSolutionApi.Controllers
             _mapper = mapper;
             _linkGenerator = linkGenerator;
         }
-        
+
         [HttpGet]
         public async Task<ActionResult<BlogModel[]>> Get(bool includeTags = false)
         {
@@ -70,7 +70,7 @@ namespace CoreSTSolutionApi.Controllers
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
             }
         }
-        
+
         public async Task<ActionResult<Blog>> Post(Blog model)
         {
             try
@@ -93,6 +93,51 @@ namespace CoreSTSolutionApi.Controllers
             }
 
             return BadRequest();
+        }
+
+        [HttpPut("{blogId}")]
+        public async Task<ActionResult<Blog>> Put(int blogId, Blog model)
+        {
+            try
+            {
+                if (blogId != model.BlogId) return BadRequest();
+                var blog =  await _blogRepository.SetModified(model);
+
+                if (await _blogRepository.SaveChangesAsync())
+                {
+                    return blog;
+                }
+                
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{blogId}")]
+        public async Task<IActionResult> Delete(int blogId)
+        {
+            try
+            {
+                var blog = await _blogRepository.GetBlogAsync(blogId);
+                if (blog == null) return NotFound();
+                
+                _blogRepository.Delete(blog);
+
+                if (await _blogRepository.SaveChangesAsync())
+                {
+                    return Ok();
+                }
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+            }
+
+            return BadRequest("Failed to delete the blog");
         }
     }
 }

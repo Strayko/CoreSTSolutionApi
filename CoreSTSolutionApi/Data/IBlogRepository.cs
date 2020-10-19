@@ -9,5 +9,6 @@ namespace CoreSTSolutionApi.Data
         Task<Blog> GetBlogAsync(int blogId, bool includeTag = false);
         Task<Blog[]> GetAllBlogsByName(string name);
         Task<Blog> IsUnique(string name);
+        Task<Blog> SetModified(Blog model);
     }
 }
