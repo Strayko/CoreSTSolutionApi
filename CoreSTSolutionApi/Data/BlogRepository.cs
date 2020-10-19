@@ -2,6 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using CoreSTSolutionApi.Data.Entities;
+using CoreSTSolutionApi.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -57,6 +59,16 @@ namespace CoreSTSolutionApi.Data
                 .Where(b => b.Name.Contains(name));
 
             return await query.ToArrayAsync();
+        }
+
+        public async Task<Blog> IsUnique(string name)
+        {
+            _logger.LogInformation($"Checks if there is an {name} in the database");
+            
+            IQueryable<Blog> query = _appDbContext.Blogs
+                .Where(b => b.Name == name);
+
+            return await query.FirstOrDefaultAsync();
         }
     }
 }

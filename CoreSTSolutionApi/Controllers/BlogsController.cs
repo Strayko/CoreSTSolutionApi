@@ -3,9 +3,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using CoreSTSolutionApi.Data;
+using CoreSTSolutionApi.Data.Entities;
 using CoreSTSolutionApi.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 
 namespace CoreSTSolutionApi.Controllers
 {
@@ -15,11 +17,13 @@ namespace CoreSTSolutionApi.Controllers
     {
         private readonly IBlogRepository _blogRepository;
         private readonly IMapper _mapper;
+        private readonly LinkGenerator _linkGenerator;
 
-        public BlogsController(IBlogRepository blogRepository, IMapper mapper)
+        public BlogsController(IBlogRepository blogRepository, IMapper mapper, LinkGenerator linkGenerator)
         {
             _blogRepository = blogRepository;
             _mapper = mapper;
+            _linkGenerator = linkGenerator;
         }
         
         [HttpGet]
@@ -65,6 +69,30 @@ namespace CoreSTSolutionApi.Controllers
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
             }
+        }
+        
+        public async Task<ActionResult<Blog>> Post(Blog model)
+        {
+            try
+            {
+                var blog = await _blogRepository.IsUnique(model.Name);
+                if (blog != null)
+                {
+                    return BadRequest("Name in Use");
+                }
+
+                _blogRepository.Add(model);
+                if (await _blogRepository.SaveChangesAsync())
+                {
+                    return Created($"/api/blogs/{model.BlogId}", model);
+                }
+            }
+            catch (Exception)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+            }
+
+            return BadRequest();
         }
     }
 }
