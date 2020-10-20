@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -37,6 +38,30 @@ namespace CoreSTSolutionApi
             services.AddScoped<ICategoryRepository, CategoryRepository>();
 
             services.AddAutoMapper();
+
+            services.AddApiVersioning(opt =>
+            {
+                opt.AssumeDefaultVersionWhenUnspecified = true;
+                opt.DefaultApiVersion = new ApiVersion(1,1);
+                opt.ReportApiVersions = true;
+                
+                // TODO:Defining the version through the url
+                // opt.ApiVersionReader = new UrlSegmentApiVersionReader();
+                
+                // TODO:Define the query string name for the api version
+                // opt.ApiVersionReader = new QueryStringApiVersionReader("ver");
+                
+                // TODO:Define the header name for the api version
+                // opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+                
+                // TODO:Defining multiple ways for the api version
+                // opt.ApiVersionReader = ApiVersionReader.Combine(
+                // new HeaderApiVersionReader("X-Version"),
+                // new QueryStringApiVersionReader("ver", "version"));
+            });
+            
+            services.AddMvc(opt => opt.EnableEndpointRouting = false)
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
