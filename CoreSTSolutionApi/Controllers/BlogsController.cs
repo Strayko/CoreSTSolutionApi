@@ -41,7 +41,7 @@ namespace CoreSTSolutionApi.Controllers
             }
         }
 
-        [HttpGet("{blogId}")]
+        [HttpGet("{blogId:int}")]
         public async Task<ActionResult<BlogModel>> Get(int blogId)
         {
             try
@@ -95,7 +95,7 @@ namespace CoreSTSolutionApi.Controllers
             return BadRequest();
         }
 
-        [HttpPut("{blogId}")]
+        [HttpPut("{blogId:int}")]
         public async Task<ActionResult<Blog>> Put(int blogId, Blog model)
         {
             try
@@ -117,7 +117,7 @@ namespace CoreSTSolutionApi.Controllers
             return BadRequest();
         }
 
-        [HttpDelete("{blogId}")]
+        [HttpDelete("{blogId:int}")]
         public async Task<IActionResult> Delete(int blogId)
         {
             try
